@@ -252,7 +252,7 @@ footer p{font:400 16px/1.4 var(--serif);margin:14px 0 0;opacity:.92}
         ph:"e.g. Nancy or Lee",table:"Table",typeMore:"Type at least 2 letters",
         none:"No guest found. Please check the spelling or ask our welcome team.",
         found1:"We found you! Tap your table to see it on the map.",foundN:"{n} guests found. Tap a table to see it on the map.",
-        more:"Showing the first {n}. Keep typing to narrow it down.",party:"Seated with you",seeMap:"Map",
+        more:"Showing the first {n}. Keep typing to narrow it down.",party:"At your table",seeMap:"Map",
         viewMap:"Table Map",viewMenu:"Menu",mapTitle:"Table map",menuTitle:"Menu",close:"Close",zoomIn:"Zoom in",zoomOut:"Fit",
         zoom:"Pinch or tap Zoom to see more detail",yourTable:"Your table: {n}",
         blessing:"Thank you for celebrating with us"},
@@ -260,7 +260,7 @@ footer p{font:400 16px/1.4 var(--serif);margin:14px 0 0;opacity:.92}
         ph:"Ví dụ: Lan hoặc Nguyễn",table:"Bàn",typeMore:"Nhập ít nhất 2 chữ cái",
         none:"Không tìm thấy tên. Vui lòng kiểm tra lại chính tả hoặc hỏi người đón khách.",
         found1:"Đã tìm thấy bạn! Chạm vào số bàn để xem trên sơ đồ.",foundN:"Tìm thấy {n} khách. Chạm vào số bàn để xem trên sơ đồ.",
-        more:"Đang hiển thị {n} người đầu tiên. Nhập thêm để thu hẹp kết quả.",party:"Ngồi cùng bạn",seeMap:"Sơ đồ",
+        more:"Đang hiển thị {n} người đầu tiên. Nhập thêm để thu hẹp kết quả.",party:"Ngồi cùng bàn",seeMap:"Sơ đồ",
         viewMap:"Sơ Đồ Bàn",viewMenu:"Thực Đơn",mapTitle:"Sơ đồ bàn",menuTitle:"Thực đơn",close:"Đóng",zoomIn:"Phóng to",zoomOut:"Thu nhỏ",
         zoom:"Dùng hai ngón tay hoặc nút Phóng to để xem rõ hơn",yourTable:"Bàn của bạn: {n}",
         blessing:"Cảm ơn bạn đã đến chung vui cùng chúng tôi"}
@@ -330,9 +330,10 @@ footer p{font:400 16px/1.4 var(--serif);margin:14px 0 0;opacity:.92}
     hint.textContent = hits.length===1 ? t('found1') : t('foundN', hits.length);
     hits.slice(0,MAX).forEach(function(h){
       var g = h.g, tbl = esc(g.t), canMap = !!(D.map && spotFor(g.t));
-      var mates = g.g ? groups[g.g].filter(function(m){ return m!==g; }) : [];
+      var mates = G.filter(function(m){ return m!==g && m.t===g.t; });
+      mates.sort(function(a,b){ var ga=(g.g&&a.g===g.g)?0:1, gb=(g.g&&b.g===g.g)?0:1; return ga-gb || G.indexOf(a)-G.indexOf(b); });
       var party = mates.length ? '<div class="party">'+esc(t('party'))+': '+mates.map(function(m){
-          return '<b>'+esc(full(m))+'</b>'+(m.t!==g.t ? ' ('+esc(t('table'))+' '+esc(m.t)+')' : '');
+          return '<b>'+esc(full(m))+'</b>';
         }).join(', ')+'</div>' : '';
       var div = document.createElement('div'); div.className='res';
       div.innerHTML = '<div class="who"><div class="name">'+highlight(full(g),qw)+'</div>'+party+'</div>'+
